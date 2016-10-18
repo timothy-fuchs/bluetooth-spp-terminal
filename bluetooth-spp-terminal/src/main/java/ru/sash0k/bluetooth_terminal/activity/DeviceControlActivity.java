@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -51,6 +54,7 @@ public final class DeviceControlActivity extends BaseActivity {
     private boolean show_timings, show_direction;
     private String command_ending;
     private String deviceName;
+    private ImageView iconView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,10 @@ public final class DeviceControlActivity extends BaseActivity {
         if (isConnected() && (savedInstanceState != null)) {
             setDeviceName(savedInstanceState.getString(DEVICE_NAME));
         } else getActionBar().setSubtitle(MSG_NOT_CONNECTED);
+
+        this.iconView = (ImageView)findViewById(R.id.alert_icon);
+        this.iconView.setAlpha(0.1F);
+
 
         this.logTextView = (TextView) findViewById(R.id.log_textview);
         this.logTextView.setMovementMethod(new ScrollingMovementMethod());
@@ -359,6 +367,22 @@ public final class DeviceControlActivity extends BaseActivity {
         else logTextView.scrollTo(0, 0);
 
         if (clean) commandEditText.setText("");
+        if (message.startsWith("!")) {
+            this.iconView.setAlpha(1.0F);
+
+            new CountDownTimer(1000, 100) {
+
+                public void onTick(long millisUntilFinished) {
+                    // implement whatever you want for every tick
+                }
+
+                public void onFinish() {
+                    ImageView iconView = (ImageView)findViewById(R.id.alert_icon);
+
+                    iconView.setAlpha(0.1F);
+                }
+            }.start();
+        }
     }
     // =========================================================================
 
