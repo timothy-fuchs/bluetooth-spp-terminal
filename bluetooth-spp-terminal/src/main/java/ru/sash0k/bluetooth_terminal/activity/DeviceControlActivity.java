@@ -367,7 +367,15 @@ public final class DeviceControlActivity extends BaseActivity {
         else logTextView.scrollTo(0, 0);
 
         if (clean) commandEditText.setText("");
-        if (message.startsWith("!")) {
+        if (message.startsWith("!") ||
+                message.startsWith("0") ||
+                message.startsWith("3") ||
+                message.startsWith("6") ||
+                message.startsWith("9") ||
+                message.startsWith(";") ||
+                message.startsWith(">") ||
+                message.startsWith("A") ||
+                message.startsWith("B")) {
             this.iconView.setAlpha(1.0F);
 
             new CountDownTimer(1000, 100) {
