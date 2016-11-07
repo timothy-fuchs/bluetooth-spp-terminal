@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -54,7 +53,9 @@ public final class DeviceControlActivity extends BaseActivity {
     private boolean show_timings, show_direction;
     private String command_ending;
     private String deviceName;
-    private ImageView iconView;
+    private ImageView alertIconView;
+    private ImageView warningIconView;
+    private ImageView okIconView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,12 @@ public final class DeviceControlActivity extends BaseActivity {
             setDeviceName(savedInstanceState.getString(DEVICE_NAME));
         } else getActionBar().setSubtitle(MSG_NOT_CONNECTED);
 
-        this.iconView = (ImageView)findViewById(R.id.alert_icon);
-        this.iconView.setAlpha(0.1F);
+        this.alertIconView = (ImageView)findViewById(R.id.alert_icon);
+        this.alertIconView.setAlpha(0.1F);
+        this.warningIconView = (ImageView)findViewById(R.id.attention_icon);
+        this.warningIconView.setAlpha(0.1F);
+        this.okIconView = (ImageView)findViewById(R.id.ok_icon);
+        this.okIconView.setAlpha(0.1F);
 
 
         this.logTextView = (TextView) findViewById(R.id.log_textview);
@@ -367,6 +372,7 @@ public final class DeviceControlActivity extends BaseActivity {
         else logTextView.scrollTo(0, 0);
 
         if (clean) commandEditText.setText("");
+        boolean activate = false;
         if (message.startsWith("!") ||
                 message.startsWith("0") ||
                 message.startsWith("3") ||
@@ -376,8 +382,30 @@ public final class DeviceControlActivity extends BaseActivity {
                 message.startsWith(">") ||
                 message.startsWith("A") ||
                 message.startsWith("B")) {
-            this.iconView.setAlpha(1.0F);
+            this.alertIconView.setAlpha(1.0F);
+            activate = true;
+        }
+        else if (message.startsWith(".") ||
+                message.startsWith("1") ||
+                message.startsWith("4") ||
+                message.startsWith("7") ||
+                message.startsWith("?") ||
+                message.startsWith("C")) {
+            this.warningIconView.setAlpha(1.0F);
+            activate = true;
+        }
+        else if (message.startsWith("/") ||
+                message.startsWith("2") ||
+                message.startsWith("5") ||
+                message.startsWith("8") ||
+                message.startsWith(":") ||
+                message.startsWith("=") ||
+                message.startsWith("@")) {
+            this.okIconView.setAlpha(1.0F);
+            activate = true;
+        }
 
+        if (activate) {
             new CountDownTimer(1000, 100) {
 
                 public void onTick(long millisUntilFinished) {
@@ -385,9 +413,12 @@ public final class DeviceControlActivity extends BaseActivity {
                 }
 
                 public void onFinish() {
-                    ImageView iconView = (ImageView)findViewById(R.id.alert_icon);
-
-                    iconView.setAlpha(0.1F);
+                    ImageView alertIconView = (ImageView)findViewById(R.id.alert_icon);
+                    alertIconView.setAlpha(0.1F);
+                    ImageView warningIconView = (ImageView)findViewById(R.id.alert_icon);
+                    warningIconView.setAlpha(0.1F);
+                    ImageView okIconView = (ImageView)findViewById(R.id.alert_icon);
+                    okIconView.setAlpha(0.1F);
                 }
             }.start();
         }
